@@ -37,7 +37,7 @@ class FeedRepository extends GetConnect {
     return (response.statusCode == 200) ? response.body : null;
   }
 
-  Future<Map?> feedCreate(String content, String? imageId) async {
+  Future<Map?> feedCreate(String content, int? imageId) async {
     Response response = await post(
       "/api/feed",
       {'content': content, "image_id": imageId},
@@ -57,6 +57,14 @@ class FeedRepository extends GetConnect {
 
   Future<Map?> feedDelete(int id) async {
     Response response = await delete(
+      "/api/feed/$id",
+      headers: {'token': await userController.getToken()},
+    );
+    return (response.statusCode == 200) ? response.body : null;
+  }
+
+  Future<Map?> feedShow(int id) async {
+    Response response = await get(
       "/api/feed/$id",
       headers: {'token': await userController.getToken()},
     );

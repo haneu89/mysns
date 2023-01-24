@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mysns/src/model/feed_model.dart';
 import 'package:mysns/src/widget/my_profile.dart';
 
 class FeedShow extends StatelessWidget {
-  const FeedShow({super.key});
+  final FeedModel feed;
+  const FeedShow(this.feed, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,20 +22,19 @@ class FeedShow extends StatelessWidget {
                 MyProfile(),
                 SizedBox(width: 20),
                 Text(
-                  '홍길동',
+                  '${feed.name}',
                   style: TextStyle(fontSize: 18),
                 ),
               ],
             ),
             SizedBox(height: 20),
-            Text(
-                "나랏말싸미 듕귁에 달아 문자와로 서르 사맛디 아니할쎄 이런 젼차로 어린 백셩이 니르고져 홀 배 이셔도 마참내 제 뜨들 시러펴디 몯 할 노미 하니라 내 이랄 위하야 어엿비 너겨 새로 스믈 여듧 짜랄 맹가노니 사람마다 해여 수비 니겨 날로 쑤메 뼌한킈 하고져 할따라미니라"),
+            Text("${feed.content}"),
             SizedBox(height: 20),
             Row(
               children: [
                 Expanded(child: SizedBox()),
                 Text(
-                  '2023-01-01',
+                  '${feed.createdAt}',
                 ),
               ],
             ),

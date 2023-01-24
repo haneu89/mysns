@@ -8,6 +8,7 @@ import 'package:mysns/src/repository/feed_repository.dart';
 class FeedController extends GetxController {
   final feedRepo = Get.put(FeedRepository());
   List feedList = [];
+  FeedModel? feedOne;
 
   Future<bool> feedIndex() async {
     List? body = await feedRepo.feedIndex();
@@ -26,7 +27,29 @@ class FeedController extends GetxController {
     return (body == null) ? null : body['id'];
   }
 
-  feedShow() {}
-  feedDelete() {}
-  feedEdit() {}
+  feedShow(int id) async {
+    Map? body = await feedRepo.feedShow(id);
+    if (body == null) {
+      return null;
+    }
+    FeedModel feed = FeedModel.parse(body);
+    feedOne = feed;
+    update();
+    return feed;
+  }
+
+  feedCreate(String content, int? imageId) async {
+    await feedRepo.feedCreate(content, imageId);
+    await feedIndex();
+  }
+
+  feedDelete(int id) async {
+    await feedRepo.feedDelete(id);
+    await feedIndex();
+  }
+
+  feedEdit(int id, String content) async {
+    await feedRepo.feedUpdate(id, content);
+    await feedShow(id);
+  }
 }

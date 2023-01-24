@@ -27,11 +27,14 @@ class _FeedWriteState extends State<FeedWrite> {
         title: const Text('피드 작성'),
         actions: [
           IconButton(
-              onPressed: () {
+              onPressed: () async {
                 String text = _textController.text;
 
                 if (text == '') {
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                } else {
+                  await feedController.feedCreate(_textController.text, tmpImg);
+                  Get.back();
                 }
               },
               icon: const Icon(Icons.save)),

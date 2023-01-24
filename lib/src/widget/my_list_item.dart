@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mysns/src/model/feed_model.dart';
 import 'package:mysns/src/screen/feed/feed_show.dart';
 import 'package:mysns/src/widget/my_profile.dart';
@@ -11,10 +12,7 @@ class MyListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const FeedShow()),
-        );
+        Get.to(() => FeedShow(feed));
       },
       child: Container(
         padding: const EdgeInsets.all(10),
