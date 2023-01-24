@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mysns/src/repository/user_repo.dart';
+import 'package:get/get.dart';
+import 'package:mysns/src/repository/user_repository.dart';
 import 'package:mysns/src/screen/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,11 +12,11 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final userRepo = Get.put(UserRepository());
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _userRepo = UserRepo();
 
   void submit() async {
     final prefs = await SharedPreferences.getInstance();
@@ -24,7 +25,7 @@ class _RegisterState extends State<Register> {
       String name = _nameController.text;
       String email = _emailController.text;
       String password = _passwordController.text;
-      String? token = await _userRepo.login(name, email, password);
+      String? token = await userRepo.register(name, email, password);
       if (token != null) {
         await prefs.setString('token', token);
         Navigator.pushReplacement(

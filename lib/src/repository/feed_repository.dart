@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:get/get.dart';
@@ -25,10 +24,7 @@ class FeedRepository extends GetConnect {
       "/api/feed",
       headers: {'token': await userController.getToken()},
     );
-    if (response.statusCode == 401) {
-      return null;
-    }
-    return response.body;
+    return (response.statusCode == 200) ? response.body : null;
   }
 
   Future<Map?> fileUpload(File image, String filename) async {
@@ -38,9 +34,32 @@ class FeedRepository extends GetConnect {
         'file': MultipartFile(image, filename: filename),
       }),
     );
-    if (response.statusCode != 200) {
-      return null;
-    }
-    return response.body;
+    return (response.statusCode == 200) ? response.body : null;
+  }
+
+  Future<Map?> feedCreate(String content, String? imageId) async {
+    Response response = await post(
+      "/api/feed",
+      {'content': content, "image_id": imageId},
+      headers: {'token': await userController.getToken()},
+    );
+    return (response.statusCode == 200) ? response.body : null;
+  }
+
+  Future<Map?> feedUpdate(int id, String content) async {
+    Response response = await put(
+      "/api/feed/$id",
+      {'content': content},
+      headers: {'token': await userController.getToken()},
+    );
+    return (response.statusCode == 200) ? response.body : null;
+  }
+
+  Future<Map?> feedDelete(int id) async {
+    Response response = await delete(
+      "/api/feed/$id",
+      headers: {'token': await userController.getToken()},
+    );
+    return (response.statusCode == 200) ? response.body : null;
   }
 }
