@@ -41,13 +41,13 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('MySNS'),
       ),
-      body: ListView(children: const [
-        MyListItem(),
-        MyListItem(),
-        MyListItem(),
-        MyListItem(),
-        MyListItem(),
-      ]),
+      body: GetBuilder<FeedController>(builder: (c) {
+        return ListView.separated(
+          itemBuilder: (context, index) => MyListItem(c.feedList[index]),
+          separatorBuilder: (context, index) => Divider(),
+          itemCount: c.feedList.length,
+        );
+      }),
     );
   }
 }

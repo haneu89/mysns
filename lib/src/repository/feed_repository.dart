@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:mysns/src/controller/user_controller.dart';
@@ -25,6 +26,19 @@ class FeedRepository extends GetConnect {
       headers: {'token': await userController.getToken()},
     );
     if (response.statusCode == 401) {
+      return null;
+    }
+    return response.body;
+  }
+
+  Future<Map?> fileUpload(File image, String filename) async {
+    Response response = await post(
+      '/file/upload',
+      FormData({
+        'file': MultipartFile(image, filename: filename),
+      }),
+    );
+    if (response.statusCode != 200) {
       return null;
     }
     return response.body;

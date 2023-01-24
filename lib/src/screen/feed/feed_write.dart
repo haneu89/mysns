@@ -1,8 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mysns/src/repository/feed_repo.dart';
+import 'package:mysns/src/controller/feed_controller.dart';
+import 'package:mysns/src/widget/image_box.dart';
+
+import '../../shared/global.dart';
 
 class FeedWrite extends StatefulWidget {
   const FeedWrite({super.key});
@@ -15,7 +17,7 @@ class _FeedWriteState extends State<FeedWrite> {
   final _textController = TextEditingController();
   final snackBar = const SnackBar(content: Text("글을 작성 해 주세요"));
   final picker = ImagePicker();
-  final feedRepo = FeedRepo();
+  final feedController = Get.put(FeedController());
   int? tmpImg;
 
   @override
@@ -46,33 +48,50 @@ class _FeedWriteState extends State<FeedWrite> {
                 expands: true,
                 minLines: null,
                 maxLines: null,
-                decoration:
-                    const InputDecoration(contentPadding: EdgeInsets.all(20)),
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.all(20),
+                  border: InputBorder.none,
+                ),
               ),
             ),
-            (tmpImg == null) ? uploadButton() : showImage(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: _upload,
+                    child: ImageBox(child: const Icon(Icons.image)),
+                  ),
+                  const SizedBox(width: 20),
+                  previewImage(),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  showImage() {
-    return Image.network('https://sns.jinhyung.kim/file/$tmpImg');
+  Widget previewImage() {
+    if (tmpImg == null) {
+      return const SizedBox();
+    }
+    return ImageBox(
+      child: Image.network(
+        "${Global.API_ROOT}/file/$tmpImg",
+        fit: BoxFit.cover,
+      ),
+    );
   }
 
-  uploadButton() {
-    return IconButton(
-      icon: const Icon(Icons.image),
-      onPressed: () async {
-        final file = await picker.pickImage(source: ImageSource.gallery);
-        String result = await feedRepo.upload(file!.path, file.name);
-        Map json = jsonDecode(result);
-
-        setState(() {
-          tmpImg = json['id'];
-        });
-      },
-    );
+  Future<void> _upload() async {
+    final file = await picker.pickImage(source: ImageSource.gallery);
+    int? result = await feedController.imageUpload(file!.path, file.name);
+    if (result != null) {
+      setState(() {
+        tmpImg = result;
+      });
+    }
   }
 }

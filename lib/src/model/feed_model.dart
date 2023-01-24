@@ -9,7 +9,7 @@ class FeedModel {
     id = m['id'];
     content = m['content'];
     createdAt = DateTime.parse(m['created_at']);
-    name = m['name'];
+    name = m['user_name'];
     imageId = m['image_id'];
   }
 }

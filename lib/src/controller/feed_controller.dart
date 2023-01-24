@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/instance_manager.dart';
 import 'package:mysns/src/model/feed_model.dart';
@@ -18,8 +20,13 @@ class FeedController extends GetxController {
     return true;
   }
 
+  imageUpload(String path, String name) async {
+    File file = File(path);
+    Map? body = await feedRepo.fileUpload(file, name);
+    return (body == null) ? null : body['id'];
+  }
+
   feedShow() {}
   feedDelete() {}
   feedEdit() {}
-  imageUpload() {}
 }
