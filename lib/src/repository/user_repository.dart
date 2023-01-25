@@ -14,7 +14,7 @@ class UserRepository extends GetConnect {
     super.onInit();
   }
 
-  Future<String?> register(String name, String email, String password) async {
+  Future<Map> register(String name, String email, String password) async {
     Response response = await post(
       "/api/user/register",
       {
@@ -23,10 +23,10 @@ class UserRepository extends GetConnect {
         'password': password,
       },
     );
-    return (response.statusCode == 200) ? response.bodyString : null;
+    return response.body;
   }
 
-  Future<String?> login(String email, String password) async {
+  Future<Map> login(String email, String password) async {
     Response response = await post(
       "/api/user/login",
       {
@@ -34,6 +34,6 @@ class UserRepository extends GetConnect {
         'password': password,
       },
     );
-    return (response.statusCode == 200) ? response.bodyString : null;
+    return response.body;
   }
 }

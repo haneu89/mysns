@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mysns/src/controller/feed_controller.dart';
+import 'package:mysns/src/model/feed_model.dart';
 import 'package:mysns/src/widget/image_box.dart';
 
 import '../../shared/global.dart';
 
+final feedController = Get.put(FeedController());
+const snackBar = SnackBar(content: Text("글을 작성 해 주세요"));
+
 class FeedWrite extends StatefulWidget {
-  const FeedWrite({super.key});
+  final FeedModel? beforeFeed;
+  const FeedWrite({super.key, this.beforeFeed});
 
   @override
   State<FeedWrite> createState() => _FeedWriteState();
@@ -15,29 +20,46 @@ class FeedWrite extends StatefulWidget {
 
 class _FeedWriteState extends State<FeedWrite> {
   final _textController = TextEditingController();
-  final snackBar = const SnackBar(content: Text("글을 작성 해 주세요"));
   final picker = ImagePicker();
-  final feedController = Get.put(FeedController());
   int? tmpImg;
+
+  Future<void> submit() async {
+    String text = _textController.text;
+
+    if (text == '') {
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
+      if (widget.beforeFeed == null) {
+        await feedController.feedCreate(_textController.text, tmpImg);
+      } else {
+        await feedController.feedEdit(
+            widget.beforeFeed!.id!, _textController.text);
+      }
+      Get.back();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fillData();
+  }
+
+  _fillData() {
+    if (widget.beforeFeed != null) {
+      _textController.text = widget.beforeFeed!.content!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('피드 작성'),
+        title: (widget.beforeFeed == null)
+            ? const Text('피드 작성')
+            : const Text('피드 수정'),
         actions: [
-          IconButton(
-              onPressed: () async {
-                String text = _textController.text;
-
-                if (text == '') {
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                } else {
-                  await feedController.feedCreate(_textController.text, tmpImg);
-                  Get.back();
-                }
-              },
-              icon: const Icon(Icons.save)),
+          IconButton(onPressed: submit, icon: const Icon(Icons.save)),
         ],
       ),
       body: SafeArea(

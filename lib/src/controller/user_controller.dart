@@ -5,32 +5,32 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserController extends GetxController {
   final userRepo = Get.put(UserRepository());
 
-  String? token;
-
   Future<String> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
-    print(token);
     return (token != null) ? token : '';
   }
 
-  Future<bool> register(String name, String email, String password) async {
-    String? token = await userRepo.register(name, email, password);
+  Future<String?> register(String name, String email, String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    Map body = await userRepo.register(name, email, password);
 
-    if (token != null) {
-      token = token;
-      return true;
+    if (body['result'] == 'success') {
+      prefs.setString('token', body['token']);
+      return null;
+    } else {
+      return body['message'];
     }
-    return false;
   }
 
-  Future<bool> login(String email, String password) async {
-    String? token = await userRepo.login(email, password);
-
-    if (token != null) {
-      token = token;
-      return true;
+  Future<String?> login(String email, String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    Map body = await userRepo.login(email, password);
+    if (body['result'] == 'success') {
+      prefs.setString('token', body['token']);
+      return null;
+    } else {
+      return body['message'];
     }
-    return false;
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:mysns/src/screen/user/register.dart';
+import 'package:mysns/src/screen/user/login.dart';
 
 import 'screen/home.dart';
 
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: (token == null) ? Register() : Home(),
+      home: (token == null) ? const Login() : const Home(),
     );
   }
 }

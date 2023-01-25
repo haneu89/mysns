@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mysns/src/model/feed_model.dart';
 import 'package:mysns/src/screen/feed/feed_show.dart';
+import 'package:mysns/src/shared/global.dart';
 import 'package:mysns/src/widget/my_profile.dart';
 
 class MyListItem extends StatelessWidget {
@@ -17,7 +18,7 @@ class MyListItem extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(10),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          MyProfile(),
+          const MyProfile(),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -28,21 +29,31 @@ class MyListItem extends StatelessWidget {
                   children: [
                     Text(
                       "${feed.name}",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Text("${feed.createdAt}",
-                        style: TextStyle(color: Colors.grey))
+                        style: const TextStyle(color: Colors.grey))
                   ],
                 ),
                 const SizedBox(height: 5),
                 Text('${feed.content}'),
+                const SizedBox(height: 20),
+                imageView(),
               ],
             ),
           )
         ]),
       ),
+    );
+  }
+
+  Widget imageView() {
+    if (feed.imageId == null) return const SizedBox();
+    return Image.network(
+      "${Global.API_ROOT}/file/${feed.imageId}",
+      height: 100,
     );
   }
 }

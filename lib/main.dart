@@ -7,5 +7,5 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final String? token = prefs.getString('token');
-  runApp(MyApp(token));
+  runApp(MyApp(null));
 }
